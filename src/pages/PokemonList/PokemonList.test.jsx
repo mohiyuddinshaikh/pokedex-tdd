@@ -22,3 +22,13 @@ test("renders pokemon list after fetch", async () => {
   const items = await screen.findAllByRole("listitem");
   expect(items.length).toBe(2);
 });
+
+test("shows error message when API fails", async () => {
+  axios.get.mockRejectedValue(new Error("API Error"));
+
+  render(<PokemonList />);
+
+  const error = await screen.findByText(/something went wrong/i);
+
+  expect(error).toBeInTheDocument();
+});
