@@ -19,8 +19,8 @@ test("renders pokemon list after fetch", async () => {
 
   render(<PokemonList />);
 
-  const items = await screen.findAllByRole("listitem");
-  expect(items.length).toBe(2);
+  expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
+  expect(screen.getByText(/bulbasaur/i)).toBeInTheDocument();
 });
 
 test("shows error message when API fails", async () => {
