@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import PokemonCard from "../../components/PokemonCard/PokemonCard";
 
 export default function PokemonList() {
   const [pokemon, setPokemon] = useState([]);
@@ -29,7 +30,9 @@ export default function PokemonList() {
   return (
     <ul>
       {pokemon.map((p) => (
-        <li key={p.name}>{p.name}</li>
+        <li key={p.name}>
+          <PokemonCard name={p.name} />
+        </li>
       ))}
     </ul>
   );
