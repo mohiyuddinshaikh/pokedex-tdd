@@ -1,0 +1,23 @@
+/* Styles for PokemonDetail Page */
+
+/* Container */
+.pokemon-detail-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  text-align: center;
+}
+
+/* Title */
+.pokemon-detail-title {
+  font-size: 2rem;
+  color: #333;
+  text-transform: capitalize;
+  margin-bottom: 20px;
+}
+
+/* Details */
+.pokemon-detail-info {
+  font-size: 1.2rem;
+  color: #555;
+  margin: 10px 0;
+}

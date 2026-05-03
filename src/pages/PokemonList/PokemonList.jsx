@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import "./PokemonList.css";
 import PokemonCard from "../../components/PokemonCard/PokemonCard";
 
 export default function PokemonList() {
@@ -43,26 +44,27 @@ export default function PokemonList() {
   const visiblePages = [page, page + 1, page + 2].filter((p) => p <= MAX_PAGE);
 
   return (
-    <div>
+    <div className="pokemon-list-container">
       {/* Search */}
       <input
         type="text"
         placeholder="Search Pokémon"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
+        className="pokemon-search"
       />
 
       {/* List */}
-      <ul>
+      <ul className="pokemon-list">
         {filteredPokemon.map((p) => (
-          <li key={p.name}>
+          <li key={p.name} className="pokemon-list-item">
             <PokemonCard name={p.name} />
           </li>
         ))}
       </ul>
 
       {/* Pagination */}
-      <div>
+      <div className="pagination">
         <button onClick={() => setPage(1)}>First</button>
 
         <button onClick={() => setPage((prev) => Math.max(prev - 1, 1))}>

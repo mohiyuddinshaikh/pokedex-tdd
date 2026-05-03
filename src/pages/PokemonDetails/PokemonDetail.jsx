@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import "./PokemonDetail.css";
 
 export default function PokemonDetail() {
   const { name } = useParams();
@@ -30,10 +31,10 @@ export default function PokemonDetail() {
   }
 
   return (
-    <div>
-      <h1>{pokemon.name}</h1>
-      <p>Height: {pokemon.height}</p>
-      <p>Weight: {pokemon.weight}</p>
+    <div className="pokemon-detail-container">
+      <h1 className="pokemon-detail-title">{pokemon.name}</h1>
+      <p className="pokemon-detail-info">Height: {pokemon.height}</p>
+      <p className="pokemon-detail-info">Weight: {pokemon.weight}</p>
     </div>
   );
 }
