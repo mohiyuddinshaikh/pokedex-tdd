@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./PokemonList.css";
 import PokemonCard from "../../components/PokemonCard/PokemonCard";
+import Pagination from "../../components/Pagination/Pagination";
 
 export default function PokemonList() {
   const [pokemon, setPokemon] = useState([]);
@@ -64,25 +65,12 @@ export default function PokemonList() {
       </ul>
 
       {/* Pagination */}
-      <div className="pagination">
-        <button onClick={() => setPage(1)}>First</button>
-
-        <button onClick={() => setPage((prev) => Math.max(prev - 1, 1))}>
-          Prev
-        </button>
-
-        {visiblePages.map((p) => (
-          <button key={p} onClick={() => setPage(p)}>
-            {p}
-          </button>
-        ))}
-
-        <button onClick={() => setPage((prev) => Math.min(prev + 1, MAX_PAGE))}>
-          Next
-        </button>
-
-        <button onClick={() => setPage(MAX_PAGE)}>Last</button>
-      </div>
+      <Pagination
+        visiblePages={visiblePages}
+        page={page}
+        setPage={setPage}
+        maxPage={MAX_PAGE}
+      />
     </div>
   );
 }

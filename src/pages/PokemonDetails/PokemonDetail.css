@@ -1,23 +1,127 @@
-/* Styles for PokemonDetail Page */
-
 /* Container */
 .pokemon-detail-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 20px;
-  background-color: #f8f9fa;
-  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 800px;
+  margin: 20px auto;
+  font-family: "Arial", sans-serif;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Back Button */
+.pokemon-back-button {
+  align-self: flex-start;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.pokemon-back-button:hover {
+  background-color: #0056b3;
 }
 
 /* Title */
 .pokemon-detail-title {
-  font-size: 2rem;
+  font-family: "Press Start 2P", system-ui;
+  font-size: 2.5rem;
   color: #333;
   text-transform: capitalize;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-align: center;
 }
 
-/* Details */
-.pokemon-detail-info {
-  font-size: 1.2rem;
+/* Image */
+.pokemon-image-container {
+  width: 100%;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.pokemon-detail-image {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Bottom section wrapper */
+.pokemon-details-section {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+
+/* Cards */
+.pokemon-basic-info,
+.pokemon-type-info {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings */
+.pokemon-basic-info h3,
+.pokemon-type-info h3 {
+  font-size: 1.4rem;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+/* Text */
+.pokemon-basic-info p {
+  margin: 6px 0;
+  font-size: 1rem;
   color: #555;
-  margin: 10px 0;
+}
+
+/* Type badges */
+.pokemon-type-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  margin: 5px 5px 0 0;
+  border-radius: 15px;
+  color: white;
+  font-weight: bold;
+  text-transform: capitalize;
+  font-size: 0.9rem;
+}
+
+.pokemon-type-badge.grass {
+  background-color: #78c850;
+}
+.pokemon-type-badge.fire {
+  background-color: #f08030;
+}
+.pokemon-type-badge.water {
+  background-color: #6890f0;
+}
+
+/* 🔥 Mobile */
+@media (max-width: 768px) {
+  .pokemon-details-section {
+    flex-direction: column;
+  }
+
+  .pokemon-detail-title {
+    font-size: 2rem;
+  }
+
+  .pokemon-detail-image {
+    width: 150px;
+  }
 }

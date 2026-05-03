@@ -2,8 +2,10 @@
 
 /* Container */
 .pokemon-list-container {
-  padding: 20px;
-  background-color: #f8f9fa;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 /* Search Input */
@@ -67,4 +69,15 @@
 .pagination button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+}
+
+.pagination button.active {
+  background: #ffffff;
+  color: #007bff;
+  border: 2px solid #007bff;
+
+  /* 🔥 make it stand out */
+  transform: scale(1.15);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
 }
