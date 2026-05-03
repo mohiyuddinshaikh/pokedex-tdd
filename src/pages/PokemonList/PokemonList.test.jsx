@@ -272,3 +272,31 @@ test("does not go beyond last page when next is clicked", async () => {
   expect(screen.getByRole("button", { name: "20" })).toBeInTheDocument();
   expect(screen.queryByRole("button", { name: "21" })).not.toBeInTheDocument();
 });
+
+test("navigates back to list page when back button is clicked", async () => {
+  axios.get.mockResolvedValue({
+    data: {
+      name: "pikachu",
+      height: 4,
+      weight: 60,
+    },
+  });
+
+  render(
+    <MemoryRouter initialEntries={["/pokemon/pikachu"]}>
+      <Routes>
+        <Route path="/" element={<PokemonList />} />
+        <Route path="/pokemon/:name" element={<PokemonDetail />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+
+  // wait for detail page
+  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
+
+  // click back
+  await userEvent.click(screen.getByRole("button", { name: /back/i }));
+
+  // expect list page (loading or list content)
+  expect(await screen.findByText(/loading/i)).toBeInTheDocument();
+});
