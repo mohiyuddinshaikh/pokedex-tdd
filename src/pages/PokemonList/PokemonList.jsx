@@ -38,6 +38,9 @@ export default function PokemonList() {
     p.name.toLowerCase().includes(search.toLowerCase()),
   );
 
+  // 👇 Sliding window logic
+  const visiblePages = [page, page + 1, page + 2];
+
   return (
     <div>
       {/* Search */}
@@ -57,13 +60,13 @@ export default function PokemonList() {
         ))}
       </ul>
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       <div>
         <button onClick={() => setPage((prev) => Math.max(prev - 1, 1))}>
           Prev
         </button>
 
-        {[1, 2, 3].map((p) => (
+        {visiblePages.map((p) => (
           <button key={p} onClick={() => setPage(p)}>
             {p}
           </button>
