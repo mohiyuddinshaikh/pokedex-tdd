@@ -211,3 +211,36 @@ test("shifts page number buttons as user navigates forward", async () => {
   // old button should be gone
   expect(screen.queryByRole("button", { name: "1" })).not.toBeInTheDocument();
 });
+
+test("navigates to first and last page using First and Last buttons", async () => {
+  axios.get
+    .mockResolvedValueOnce({
+      data: { results: [{ name: "pikachu" }] }, // page 1
+    })
+    .mockResolvedValue({
+      data: { results: [{ name: "bulbasaur" }] }, // other pages
+    });
+
+  render(
+    <MemoryRouter>
+      <PokemonList />
+    </MemoryRouter>,
+  );
+
+  // initial load (page 1)
+  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
+
+  // go to page 3
+  await userEvent.click(screen.getByRole("button", { name: "3" }));
+
+  // go to first
+  await userEvent.click(screen.getByRole("button", { name: /first/i }));
+
+  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
+
+  // go to last (assume page 10)
+  await userEvent.click(screen.getByRole("button", { name: /last/i }));
+
+  // verify page window shifted accordingly (10,11,12)
+  expect(await screen.findByRole("button", { name: "10" })).toBeInTheDocument();
+});
