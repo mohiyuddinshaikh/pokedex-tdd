@@ -63,3 +63,43 @@ test("navigates back to list page when back button is clicked", async () => {
   // now list page should appear
   expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
 });
+
+test("renders detailed pokemon information including image, abilities and types", async () => {
+  axios.get.mockResolvedValue({
+    data: {
+      name: "pikachu",
+      height: 4,
+      weight: 60,
+      abilities: [
+        { ability: { name: "static" } },
+        { ability: { name: "lightning-rod" } },
+      ],
+      types: [{ type: { name: "electric" } }],
+      sprites: {
+        front_default: "pikachu.png",
+      },
+    },
+  });
+
+  render(
+    <MemoryRouter initialEntries={["/pokemon/pikachu"]}>
+      <Routes>
+        <Route path="/pokemon/:name" element={<PokemonDetail />} />
+      </Routes>
+    </MemoryRouter>,
+  );
+
+  // existing checks
+  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
+
+  // new checks
+  expect(screen.getByText(/height/i)).toBeInTheDocument();
+  expect(screen.getByText(/weight/i)).toBeInTheDocument();
+
+  expect(screen.getByText(/static/i)).toBeInTheDocument();
+  expect(screen.getByText(/lightning-rod/i)).toBeInTheDocument();
+
+  expect(screen.getByText(/electric/i)).toBeInTheDocument();
+
+  expect(screen.getByRole("img")).toBeInTheDocument();
+});
