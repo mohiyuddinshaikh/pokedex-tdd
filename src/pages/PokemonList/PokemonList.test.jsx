@@ -123,3 +123,34 @@ test("loads next page of pokemon when next button is clicked", async () => {
   // second page
   expect(await screen.findByText(/bulbasaur/i)).toBeInTheDocument();
 });
+
+test("goes back to previous page when prev is clicked", async () => {
+  axios.get
+    .mockResolvedValueOnce({
+      data: { results: [{ name: "pikachu" }] },
+    })
+    .mockResolvedValueOnce({
+      data: { results: [{ name: "bulbasaur" }] },
+    })
+    .mockResolvedValueOnce({
+      data: { results: [{ name: "pikachu" }] },
+    });
+
+  render(
+    <MemoryRouter>
+      <PokemonList />
+    </MemoryRouter>,
+  );
+
+  // first page
+  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
+
+  // go to next page
+  await userEvent.click(screen.getByRole("button", { name: /next/i }));
+  expect(await screen.findByText(/bulbasaur/i)).toBeInTheDocument();
+
+  // go back
+  await userEvent.click(screen.getByRole("button", { name: /prev/i }));
+
+  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
+});
