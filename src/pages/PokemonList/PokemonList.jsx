@@ -6,12 +6,15 @@ export default function PokemonList() {
   const [pokemon, setPokemon] = useState([]);
   const [error, setError] = useState(false);
   const [search, setSearch] = useState("");
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const limit = 20;
+  const offset = (page - 1) * limit;
 
   async function fetchPokemon() {
     try {
       const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`,
+        `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`,
       );
       setPokemon(response?.data?.results);
     } catch (e) {
@@ -21,7 +24,7 @@ export default function PokemonList() {
 
   useEffect(() => {
     fetchPokemon();
-  }, [offset]);
+  }, [page]);
 
   if (error) {
     return <p>Something went wrong</p>;
@@ -37,6 +40,7 @@ export default function PokemonList() {
 
   return (
     <div>
+      {/* Search */}
       <input
         type="text"
         placeholder="Search Pokémon"
@@ -44,6 +48,7 @@ export default function PokemonList() {
         onChange={(e) => setSearch(e.target.value)}
       />
 
+      {/* List */}
       <ul>
         {filteredPokemon.map((p) => (
           <li key={p.name}>
@@ -52,10 +57,20 @@ export default function PokemonList() {
         ))}
       </ul>
 
-      <button onClick={() => setOffset((prev) => Math.max(prev - 20, 0))}>
-        Prev
-      </button>
-      <button onClick={() => setOffset((prev) => prev + 20)}>Next</button>
+      {/* Pagination Controls */}
+      <div>
+        <button onClick={() => setPage((prev) => Math.max(prev - 1, 1))}>
+          Prev
+        </button>
+
+        {[1, 2, 3].map((p) => (
+          <button key={p} onClick={() => setPage(p)}>
+            {p}
+          </button>
+        ))}
+
+        <button onClick={() => setPage((prev) => prev + 1)}>Next</button>
+      </div>
     </div>
   );
 }
