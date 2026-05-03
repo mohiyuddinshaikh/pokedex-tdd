@@ -40,7 +40,7 @@ export default function PokemonList() {
   );
 
   // Sliding window: [page, page+1, page+2]
-  const visiblePages = [page, page + 1, page + 2];
+  const visiblePages = [page, page + 1, page + 2].filter((p) => p <= MAX_PAGE);
 
   return (
     <div>

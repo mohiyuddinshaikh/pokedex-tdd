@@ -261,15 +261,14 @@ test("does not go beyond last page when next is clicked", async () => {
     </MemoryRouter>,
   );
 
-  // go to last page
+  // ✅ WAIT for UI to load
+  await screen.findByText(/pikachu/i);
+
+  // now safe to interact
   await userEvent.click(screen.getByRole("button", { name: /last/i }));
 
-  // try to go beyond
   await userEvent.click(screen.getByRole("button", { name: /next/i }));
 
-  // still on page 20
   expect(screen.getByRole("button", { name: "20" })).toBeInTheDocument();
-
-  // should NOT move to 21
   expect(screen.queryByRole("button", { name: "21" })).not.toBeInTheDocument();
 });
