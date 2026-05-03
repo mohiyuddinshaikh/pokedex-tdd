@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "./PokemonDetail.css";
 
 export default function PokemonDetail() {
+  const navigate = useNavigate();
   const { name } = useParams();
 
   const [pokemon, setPokemon] = useState(null);
@@ -32,6 +33,7 @@ export default function PokemonDetail() {
 
   return (
     <div className="pokemon-detail-container">
+      <button onClick={() => navigate(-1)}>Back</button>
       <h1 className="pokemon-detail-title">{pokemon.name}</h1>
       <p className="pokemon-detail-info">Height: {pokemon.height}</p>
       <p className="pokemon-detail-info">Weight: {pokemon.weight}</p>

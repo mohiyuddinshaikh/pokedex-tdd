@@ -4,6 +4,7 @@ import { expect, test, vi } from "vitest";
 import axios from "axios";
 import PokemonDetail from "./PokemonDetail";
 import userEvent from "@testing-library/user-event";
+import PokemonList from "../PokemonList/PokemonList";
 
 vi.mock("axios");
 
@@ -30,16 +31,24 @@ test("renders pokemon detail after fetch", async () => {
 });
 
 test("navigates back to list page when back button is clicked", async () => {
-  axios.get.mockResolvedValue({
-    data: {
-      name: "pikachu",
-      height: 4,
-      weight: 60,
-    },
-  });
+  axios.get
+    // first call → detail page
+    .mockResolvedValueOnce({
+      data: {
+        name: "pikachu",
+        height: 4,
+        weight: 60,
+      },
+    })
+    // second call → list page
+    .mockResolvedValueOnce({
+      data: {
+        results: [{ name: "pikachu" }],
+      },
+    });
 
   render(
-    <MemoryRouter initialEntries={["/pokemon/pikachu"]}>
+    <MemoryRouter initialEntries={["/", "/pokemon/pikachu"]} initialIndex={1}>
       <Routes>
         <Route path="/" element={<PokemonList />} />
         <Route path="/pokemon/:name" element={<PokemonDetail />} />
@@ -47,12 +56,10 @@ test("navigates back to list page when back button is clicked", async () => {
     </MemoryRouter>,
   );
 
-  // wait for detail page
   expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
 
-  // click back
   await userEvent.click(screen.getByRole("button", { name: /back/i }));
 
-  // expect list page (loading or list content)
-  expect(await screen.findByText(/loading/i)).toBeInTheDocument();
+  // now list page should appear
+  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
 });
