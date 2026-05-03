@@ -15,6 +15,13 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.utility-container {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
 /* Back Button */
 .pokemon-back-button {
   align-self: flex-start;
@@ -26,6 +33,18 @@
   cursor: pointer;
   font-size: 14px;
   margin-bottom: 10px;
+}
+
+.icon-button {
+  all: unset; /* removes ALL default + inherited button styles */
+  cursor: pointer;
+  display: inline-flex;
+}
+
+.icon-button:hover {
+  all: unset; /* removes ALL default + inherited button styles */
+  cursor: pointer;
+  display: inline-flex;
 }
 
 .pokemon-back-button:hover {
@@ -95,7 +114,8 @@
   padding: 6px 10px;
   margin: 5px 5px 0 0;
   border-radius: 15px;
-  color: white;
+  color: black;
+  background-color: bisque;
   font-weight: bold;
   text-transform: capitalize;
   font-size: 0.9rem;
