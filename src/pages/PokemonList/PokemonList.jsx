@@ -9,6 +9,7 @@ export default function PokemonList() {
   const [page, setPage] = useState(1);
 
   const limit = 20;
+  const MAX_PAGE = 20; // 👈 updated
   const offset = (page - 1) * limit;
 
   async function fetchPokemon() {
@@ -38,7 +39,7 @@ export default function PokemonList() {
     p.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  // 👇 Sliding window logic
+  // Sliding window: [page, page+1, page+2]
   const visiblePages = [page, page + 1, page + 2];
 
   return (
@@ -62,6 +63,8 @@ export default function PokemonList() {
 
       {/* Pagination */}
       <div>
+        <button onClick={() => setPage(1)}>First</button>
+
         <button onClick={() => setPage((prev) => Math.max(prev - 1, 1))}>
           Prev
         </button>
@@ -72,7 +75,11 @@ export default function PokemonList() {
           </button>
         ))}
 
-        <button onClick={() => setPage((prev) => prev + 1)}>Next</button>
+        <button onClick={() => setPage((prev) => Math.min(prev + 1, MAX_PAGE))}>
+          Next
+        </button>
+
+        <button onClick={() => setPage(MAX_PAGE)}>Last</button>
       </div>
     </div>
   );

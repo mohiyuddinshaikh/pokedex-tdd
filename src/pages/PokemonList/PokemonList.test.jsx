@@ -217,8 +217,14 @@ test("navigates to first and last page using First and Last buttons", async () =
     .mockResolvedValueOnce({
       data: { results: [{ name: "pikachu" }] }, // page 1
     })
+    .mockResolvedValueOnce({
+      data: { results: [{ name: "bulbasaur" }] }, // page 3
+    })
+    .mockResolvedValueOnce({
+      data: { results: [{ name: "pikachu" }] }, // back to page 1
+    })
     .mockResolvedValue({
-      data: { results: [{ name: "bulbasaur" }] }, // other pages
+      data: { results: [{ name: "bulbasaur" }] }, // fallback
     });
 
   render(
