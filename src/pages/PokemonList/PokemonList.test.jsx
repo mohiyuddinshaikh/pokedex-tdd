@@ -63,3 +63,33 @@ test("navigates to pokemon detail page on card click", async () => {
 
   expect(await screen.findByText(/detail page/i)).toBeInTheDocument();
 });
+
+test("filters pokemon list based on search input", async () => {
+  axios.get.mockResolvedValue({
+    data: {
+      results: [
+        { name: "pikachu" },
+        { name: "bulbasaur" },
+        { name: "charmander" },
+      ],
+    },
+  });
+
+  render(
+    <MemoryRouter>
+      <PokemonList />
+    </MemoryRouter>,
+  );
+
+  // wait for list to render
+  await screen.findByText(/pikachu/i);
+
+  // type into search
+  const input = screen.getByRole("textbox");
+  await userEvent.type(input, "pika");
+
+  // expect filtered result
+  expect(screen.getByText(/pikachu/i)).toBeInTheDocument();
+  expect(screen.queryByText(/bulbasaur/i)).not.toBeInTheDocument();
+  expect(screen.queryByText(/charmander/i)).not.toBeInTheDocument();
+});
