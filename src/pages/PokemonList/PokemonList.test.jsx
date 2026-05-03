@@ -235,12 +235,35 @@ test("navigates to first and last page using First and Last buttons", async () =
 
   // go to first
   await userEvent.click(screen.getByRole("button", { name: /first/i }));
-
   expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
 
-  // go to last (assume page 10)
+  // go to last (page 20)
   await userEvent.click(screen.getByRole("button", { name: /last/i }));
 
-  // verify page window shifted accordingly (10,11,12)
-  expect(await screen.findByRole("button", { name: "10" })).toBeInTheDocument();
+  // pagination window should now include 20
+  expect(await screen.findByRole("button", { name: "20" })).toBeInTheDocument();
+});
+
+test("does not go beyond last page when next is clicked", async () => {
+  axios.get.mockResolvedValue({
+    data: { results: [{ name: "pikachu" }] },
+  });
+
+  render(
+    <MemoryRouter>
+      <PokemonList />
+    </MemoryRouter>,
+  );
+
+  // go to last page
+  await userEvent.click(screen.getByRole("button", { name: /last/i }));
+
+  // try to go beyond
+  await userEvent.click(screen.getByRole("button", { name: /next/i }));
+
+  // still on page 20
+  expect(screen.getByRole("button", { name: "20" })).toBeInTheDocument();
+
+  // should NOT move to 21
+  expect(screen.queryByRole("button", { name: "21" })).not.toBeInTheDocument();
 });
