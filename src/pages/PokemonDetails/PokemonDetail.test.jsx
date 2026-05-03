@@ -107,5 +107,5 @@ test("renders detailed pokemon information including image, abilities and types"
   expect(screen.getByText(/electric/i)).toBeInTheDocument();
 
   // image
-  expect(screen.getByRole("img")).toBeInTheDocument();
+  expect(screen.getByRole("img", { name: /pikachu/i })).toBeInTheDocument();
 });
