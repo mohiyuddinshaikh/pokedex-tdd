@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { expect, test, vi } from "vitest";
 import PokemonList from "./PokemonList";
 import axios from "axios";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 
 test("shows loading initially", () => {
@@ -19,7 +19,11 @@ test("renders pokemon list after fetch", async () => {
     },
   });
 
-  render(<PokemonList />);
+  render(
+    <MemoryRouter>
+      <PokemonList />
+    </MemoryRouter>,
+  );
 
   const pikachu = await screen.findByText(/pikachu/i);
   const bulbasaur = await screen.findByText(/bulbasaur/i);
@@ -46,14 +50,16 @@ test("navigates to pokemon detail page on card click", async () => {
   });
 
   render(
-    <MemoryRouter>
-      <PokemonList />
+    <MemoryRouter initialEntries={["/"]}>
+      <Routes>
+        <Route path="/" element={<PokemonList />} />
+        <Route path="/pokemon/:name" element={<div>Detail Page</div>} />
+      </Routes>
     </MemoryRouter>,
   );
 
   const card = await screen.findByText(/pikachu/i);
-
   await userEvent.click(card);
 
-  expect(window.location.pathname).toBe("/pokemon/pikachu");
+  expect(await screen.findByText(/detail page/i)).toBeInTheDocument();
 });
