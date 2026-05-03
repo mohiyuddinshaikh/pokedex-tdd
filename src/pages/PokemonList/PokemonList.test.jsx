@@ -93,3 +93,33 @@ test("filters pokemon list based on search input", async () => {
   expect(screen.queryByText(/bulbasaur/i)).not.toBeInTheDocument();
   expect(screen.queryByText(/charmander/i)).not.toBeInTheDocument();
 });
+
+test("loads next page of pokemon when next button is clicked", async () => {
+  axios.get
+    .mockResolvedValueOnce({
+      data: {
+        results: [{ name: "pikachu" }],
+      },
+    })
+    .mockResolvedValueOnce({
+      data: {
+        results: [{ name: "bulbasaur" }],
+      },
+    });
+
+  render(
+    <MemoryRouter>
+      <PokemonList />
+    </MemoryRouter>,
+  );
+
+  // first page
+  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
+
+  // click next
+  const nextButton = screen.getByRole("button", { name: /next/i });
+  await userEvent.click(nextButton);
+
+  // second page
+  expect(await screen.findByText(/bulbasaur/i)).toBeInTheDocument();
+});
