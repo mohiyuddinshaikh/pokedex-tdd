@@ -55,7 +55,12 @@ export default function PokemonDetail() {
           Back
         </button>
         <button className="icon-button" onClick={() => speakDescription()}>
-          <img src={Speaker} height={35} width={35} />
+          <img
+            src={Speaker}
+            title="Click for Audio Description"
+            height={35}
+            width={35}
+          />
         </button>
       </div>
 
