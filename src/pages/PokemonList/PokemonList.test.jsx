@@ -179,3 +179,35 @@ test("navigates to a specific page when page number is clicked", async () => {
   // new data
   expect(await screen.findByText(/bulbasaur/i)).toBeInTheDocument();
 });
+
+test("shifts page number buttons as user navigates forward", async () => {
+  axios.get
+    .mockResolvedValueOnce({
+      data: { results: [{ name: "pikachu" }] }, // page 1
+    })
+    .mockResolvedValue({
+      data: { results: [{ name: "bulbasaur" }] }, // subsequent pages
+    });
+
+  render(
+    <MemoryRouter>
+      <PokemonList />
+    </MemoryRouter>,
+  );
+
+  // initial state → 1,2,3
+  expect(await screen.findByRole("button", { name: "1" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "2" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "3" })).toBeInTheDocument();
+
+  // go to page 3
+  await userEvent.click(screen.getByRole("button", { name: "3" }));
+
+  // window should shift → 3,4,5
+  expect(await screen.findByRole("button", { name: "3" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "4" })).toBeInTheDocument();
+  expect(screen.getByRole("button", { name: "5" })).toBeInTheDocument();
+
+  // old button should be gone
+  expect(screen.queryByRole("button", { name: "1" })).not.toBeInTheDocument();
+});
