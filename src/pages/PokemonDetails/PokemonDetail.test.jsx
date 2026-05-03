@@ -14,6 +14,9 @@ test("renders pokemon detail after fetch", async () => {
       name: "pikachu",
       height: 4,
       weight: 60,
+      sprites: { front_default: "pikachu.png" },
+      abilities: [],
+      types: [],
     },
   });
 
@@ -89,17 +92,20 @@ test("renders detailed pokemon information including image, abilities and types"
     </MemoryRouter>,
   );
 
-  // existing checks
+  // main data
   expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
 
-  // new checks
+  // basic info
   expect(screen.getByText(/height/i)).toBeInTheDocument();
   expect(screen.getByText(/weight/i)).toBeInTheDocument();
 
+  // abilities (ALL, not just one)
   expect(screen.getByText(/static/i)).toBeInTheDocument();
   expect(screen.getByText(/lightning-rod/i)).toBeInTheDocument();
 
+  // types
   expect(screen.getByText(/electric/i)).toBeInTheDocument();
 
+  // image
   expect(screen.getByRole("img")).toBeInTheDocument();
 });
