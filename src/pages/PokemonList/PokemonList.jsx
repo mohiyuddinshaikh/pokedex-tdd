@@ -52,6 +52,9 @@ export default function PokemonList() {
         ))}
       </ul>
 
+      <button onClick={() => setOffset((prev) => Math.max(prev - 20, 0))}>
+        Prev
+      </button>
       <button onClick={() => setOffset((prev) => prev + 20)}>Next</button>
     </div>
   );
