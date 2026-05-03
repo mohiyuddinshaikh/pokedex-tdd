@@ -6,10 +6,13 @@ export default function PokemonList() {
   const [pokemon, setPokemon] = useState([]);
   const [error, setError] = useState(false);
   const [search, setSearch] = useState("");
+  const [offset, setOffset] = useState(0);
 
   async function fetchPokemon() {
     try {
-      const response = await axios.get("https://pokeapi.co/api/v2/pokemon");
+      const response = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`,
+      );
       setPokemon(response?.data?.results);
     } catch (e) {
       setError(true);
@@ -18,7 +21,7 @@ export default function PokemonList() {
 
   useEffect(() => {
     fetchPokemon();
-  }, []);
+  }, [offset]);
 
   if (error) {
     return <p>Something went wrong</p>;
@@ -48,6 +51,8 @@ export default function PokemonList() {
           </li>
         ))}
       </ul>
+
+      <button onClick={() => setOffset((prev) => prev + 20)}>Next</button>
     </div>
   );
 }
