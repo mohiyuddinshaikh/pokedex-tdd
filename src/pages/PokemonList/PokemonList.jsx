@@ -2,24 +2,21 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./PokemonList.css";
 import PokemonCard from "../../components/PokemonCard/PokemonCard";
-import Pagination from "../../components/Pagination/Pagination";
 
 export default function PokemonList() {
   const [pokemon, setPokemon] = useState([]);
   const [error, setError] = useState(false);
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
+  const [offset, setOffset] = useState(0);
 
   const limit = 20;
-  const MAX_PAGE = 20; // 👈 updated
-  const offset = (page - 1) * limit;
 
   async function fetchPokemon() {
     try {
       const response = await axios.get(
         `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`,
       );
-      setPokemon(response?.data?.results);
+      setPokemon((prev) => [...prev, ...response?.data?.results]);
     } catch (e) {
       setError(true);
     }
@@ -27,7 +24,7 @@ export default function PokemonList() {
 
   useEffect(() => {
     fetchPokemon();
-  }, [page]);
+  }, [offset]);
 
   if (error) {
     return <p>Something went wrong</p>;
@@ -41,8 +38,9 @@ export default function PokemonList() {
     p.name.toLowerCase().includes(search.toLowerCase()),
   );
 
-  // Sliding window: [page, page+1, page+2]
-  const visiblePages = [page, page + 1, page + 2].filter((p) => p <= MAX_PAGE);
+  const loadMore = () => {
+    setOffset((prevOffset) => prevOffset + limit);
+  };
 
   return (
     <div className="pokemon-list-container">
@@ -64,13 +62,10 @@ export default function PokemonList() {
         ))}
       </ul>
 
-      {/* Pagination */}
-      <Pagination
-        visiblePages={visiblePages}
-        page={page}
-        setPage={setPage}
-        maxPage={MAX_PAGE}
-      />
+      {/* Load More Button */}
+      <button onClick={loadMore} className="load-more-button">
+        Load More
+      </button>
     </div>
   );
 }

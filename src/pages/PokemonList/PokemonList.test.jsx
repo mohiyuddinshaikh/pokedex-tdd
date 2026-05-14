@@ -94,46 +94,13 @@ test("filters pokemon list based on search input", async () => {
   expect(screen.queryByText(/charmander/i)).not.toBeInTheDocument();
 });
 
-test("loads next page of pokemon when next button is clicked", async () => {
-  axios.get
-    .mockResolvedValueOnce({
-      data: {
-        results: [{ name: "pikachu" }],
-      },
-    })
-    .mockResolvedValueOnce({
-      data: {
-        results: [{ name: "bulbasaur" }],
-      },
-    });
-
-  render(
-    <MemoryRouter>
-      <PokemonList />
-    </MemoryRouter>,
-  );
-
-  // first page
-  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
-
-  // click next
-  const nextButton = screen.getByRole("button", { name: /next/i });
-  await userEvent.click(nextButton);
-
-  // second page
-  expect(await screen.findByText(/bulbasaur/i)).toBeInTheDocument();
-});
-
-test("goes back to previous page when prev is clicked", async () => {
+test("loads more pokemon when 'Load More' button is clicked", async () => {
   axios.get
     .mockResolvedValueOnce({
       data: { results: [{ name: "pikachu" }] },
     })
     .mockResolvedValueOnce({
       data: { results: [{ name: "bulbasaur" }] },
-    })
-    .mockResolvedValueOnce({
-      data: { results: [{ name: "pikachu" }] },
     });
 
   render(
@@ -142,133 +109,13 @@ test("goes back to previous page when prev is clicked", async () => {
     </MemoryRouter>,
   );
 
-  // first page
+  // initial load
   expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
 
-  // go to next page
-  await userEvent.click(screen.getByRole("button", { name: /next/i }));
-  expect(await screen.findByText(/bulbasaur/i)).toBeInTheDocument();
-
-  // go back
-  await userEvent.click(screen.getByRole("button", { name: /prev/i }));
-
-  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
-});
-
-test("navigates to a specific page when page number is clicked", async () => {
-  axios.get
-    .mockResolvedValueOnce({
-      data: { results: [{ name: "pikachu" }] }, // page 1
-    })
-    .mockResolvedValueOnce({
-      data: { results: [{ name: "bulbasaur" }] }, // page 2
-    });
-
-  render(
-    <MemoryRouter>
-      <PokemonList />
-    </MemoryRouter>,
-  );
-
-  // initial page
-  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
-
-  // click page 2
-  await userEvent.click(screen.getByRole("button", { name: "2" }));
+  // click load more
+  const loadMoreButton = screen.getByRole("button", { name: /load more/i });
+  await userEvent.click(loadMoreButton);
 
   // new data
   expect(await screen.findByText(/bulbasaur/i)).toBeInTheDocument();
-});
-
-test("shifts page number buttons as user navigates forward", async () => {
-  axios.get
-    .mockResolvedValueOnce({
-      data: { results: [{ name: "pikachu" }] }, // page 1
-    })
-    .mockResolvedValue({
-      data: { results: [{ name: "bulbasaur" }] }, // subsequent pages
-    });
-
-  render(
-    <MemoryRouter>
-      <PokemonList />
-    </MemoryRouter>,
-  );
-
-  // initial state → 1,2,3
-  expect(await screen.findByRole("button", { name: "1" })).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "2" })).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "3" })).toBeInTheDocument();
-
-  // go to page 3
-  await userEvent.click(screen.getByRole("button", { name: "3" }));
-
-  // window should shift → 3,4,5
-  expect(await screen.findByRole("button", { name: "3" })).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "4" })).toBeInTheDocument();
-  expect(screen.getByRole("button", { name: "5" })).toBeInTheDocument();
-
-  // old button should be gone
-  expect(screen.queryByRole("button", { name: "1" })).not.toBeInTheDocument();
-});
-
-test("navigates to first and last page using First and Last buttons", async () => {
-  axios.get
-    .mockResolvedValueOnce({
-      data: { results: [{ name: "pikachu" }] }, // page 1
-    })
-    .mockResolvedValueOnce({
-      data: { results: [{ name: "bulbasaur" }] }, // page 3
-    })
-    .mockResolvedValueOnce({
-      data: { results: [{ name: "pikachu" }] }, // back to page 1
-    })
-    .mockResolvedValue({
-      data: { results: [{ name: "bulbasaur" }] }, // fallback
-    });
-
-  render(
-    <MemoryRouter>
-      <PokemonList />
-    </MemoryRouter>,
-  );
-
-  // initial load (page 1)
-  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
-
-  // go to page 3
-  await userEvent.click(screen.getByRole("button", { name: "3" }));
-
-  // go to first
-  await userEvent.click(screen.getByRole("button", { name: /first/i }));
-  expect(await screen.findByText(/pikachu/i)).toBeInTheDocument();
-
-  // go to last (page 20)
-  await userEvent.click(screen.getByRole("button", { name: /last/i }));
-
-  // pagination window should now include 20
-  expect(await screen.findByRole("button", { name: "20" })).toBeInTheDocument();
-});
-
-test("does not go beyond last page when next is clicked", async () => {
-  axios.get.mockResolvedValue({
-    data: { results: [{ name: "pikachu" }] },
-  });
-
-  render(
-    <MemoryRouter>
-      <PokemonList />
-    </MemoryRouter>,
-  );
-
-  // ✅ WAIT for UI to load
-  await screen.findByText(/pikachu/i);
-
-  // now safe to interact
-  await userEvent.click(screen.getByRole("button", { name: /last/i }));
-
-  await userEvent.click(screen.getByRole("button", { name: /next/i }));
-
-  expect(screen.getByRole("button", { name: "20" })).toBeInTheDocument();
-  expect(screen.queryByRole("button", { name: "21" })).not.toBeInTheDocument();
 });
